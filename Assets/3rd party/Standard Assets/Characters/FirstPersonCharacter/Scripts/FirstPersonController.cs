@@ -48,6 +48,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private GameObject m_SceneControllerObject;
 
 
+
         private void Awake() // Awake must be added to instantiate a Scene Controller as it extends monobehaviour it cannot be called outside its dependend object, i.e. a seperate gameobject for the scene controller MUST be in the scene at all times.
         {
             m_SceneControllerObject = GameObject.Find("SceneControllerObject"); // Used to call script attached to this in Start();
@@ -80,6 +81,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         // Update is called once per frame
         private void Update()
         {
+            charSpotlight();
             RotateView();
             // the jump state needs to read here to make sure it is not missed
             if (!m_Jump)
@@ -278,5 +280,13 @@ namespace UnityStandardAssets.Characters.FirstPerson
             }
             body.AddForceAtPosition(m_CharacterController.velocity*0.1f, hit.point, ForceMode.Impulse);
         }
+    private void charSpotlight()
+        {
+            if (Input.GetKeyDown(KeyCode.L) && m_CharacterController.GetComponent<Light>().enabled)
+                m_CharacterController.GetComponent<Light>().enabled = false;
+            else if(Input.GetKeyDown(KeyCode.L) && !m_CharacterController.GetComponent<Light>().enabled)
+                m_CharacterController.GetComponent<Light>().enabled = true;
+        }
+
     }
 }

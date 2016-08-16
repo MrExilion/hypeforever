@@ -126,7 +126,7 @@ public class SceneController : MonoBehaviour  {
 
                         inGamePauseCanvas.enabled = true;
                         inGameStandardCanvas.enabled = false;
-                        //placeholder_4.enabled = false;
+                        placeholder_4.enabled = false;
                         //placeholder_5.enabled = false;
                         //placeholder_6.enabled = false;
                         //placeholder_7.enabled = false;
@@ -142,7 +142,7 @@ public class SceneController : MonoBehaviour  {
 
                         inGamePauseCanvas.enabled = false;
                         inGameStandardCanvas.enabled = true;
-                        //placeholder_4.enabled = false;
+                        placeholder_4.enabled = false;
                         //placeholder_5.enabled = false;
                         //placeholder_6.enabled = false;
                         //placeholder_7.enabled = false;
@@ -155,10 +155,48 @@ public class SceneController : MonoBehaviour  {
                     {
                         //mainMenuCanvas.enabled = false;
                         //creditsCanvas.enabled = false;
+                        if (getPauseState() && !inGamePauseCanvas.enabled)
+                            scenePauser(false);
+                        else if (!getPauseState() && !inGamePauseCanvas.enabled)
+                            scenePauser(true);
+                        else if (getPauseState())
+                        {
+                            scenePauser(true);
+                            inGamePauseCanvas.enabled = true;
+                        }
+                        else if (!getPauseState())
+                        {
+                            scenePauser(true);
+                            inGamePauseCanvas.enabled = true;
+                        }
+                        else if (getPauseState() && placeholder_4.enabled)
+                        {
+                            scenePauser(false);
+                            placeholder_4.enabled = false;
+                        }   
+                        if (inGamePauseCanvas.enabled) {
+                            inGamePauseCanvas.enabled = false;
+                            if (Input.GetButton("Map")) {
+                                inGamePauseCanvas.enabled = true;
+                                Cursor.lockState = CursorLockMode.None;
+                                Cursor.visible = true;
+                            }
+                            else {
+                                Cursor.lockState = CursorLockMode.Locked;
+                                Cursor.visible = false;
 
-                        //inGamePauseCanvas.enabled = false;
-                        //inGameStandardCanvas.enabled = false;
-                        //placeholder_4.enabled = true;
+                            }
+
+                        }
+                        inGameStandardCanvas.enabled = !inGameStandardCanvas.enabled;
+                        if (placeholder_4.enabled) { 
+                            placeholder_4.enabled = false;
+                            
+                            Cursor.lockState = CursorLockMode.None;
+                            Cursor.visible = true;
+                        }
+                        else if (!placeholder_4.enabled)
+                            placeholder_4.enabled = true;
                         //placeholder_5.enabled = false;
                         //placeholder_6.enabled = false;
                         //placeholder_7.enabled = false;
@@ -297,21 +335,26 @@ public class SceneController : MonoBehaviour  {
     {
         if (Input.GetKeyDown(KeyCode.Pause) && !isPaused)
         {
-            canvasSwapper(2);
+            if (!inGamePauseCanvas.enabled)
+                canvasSwapper(2);
+
             scenePauser(true);
             yield return new WaitForSeconds(1f);
         }
-        if (Input.GetKeyDown(KeyCode.Escape) && isPaused)
+        if (Input.GetKeyDown(KeyCode.Escape) && isPaused && !placeholder_4.enabled)
         {
             scenePauser(false);
-            canvasSwapper(3);
+            if(inGamePauseCanvas.enabled)
+                canvasSwapper(3);
 
             yield return new WaitForSeconds(1f);
         }
-        if (Input.GetKeyDown(KeyCode.Pause) && isPaused)
+        if (Input.GetKeyDown(KeyCode.Pause) && isPaused && !placeholder_4.enabled)
         {
+
             scenePauser(false);
-            canvasSwapper(3);
+            if (inGamePauseCanvas.enabled)
+                canvasSwapper(3);
             yield return new WaitForSeconds(1f);
         }
     }
